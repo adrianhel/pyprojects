@@ -5,4 +5,4 @@
 ---
 
 ## Содержание
-### [Работа с timeit](timeit/timeit.md)
+### [Работа с timeit](data/timeit.py)
