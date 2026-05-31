@@ -19,6 +19,6 @@
 ```python
 import timeit
 
-result = timeit.timeit("sum([i for i in range(100)])", number=10000)
+result = timeit.timeit("sum([i for i in range(100)])", number=100000)
 print(result)
 ```
