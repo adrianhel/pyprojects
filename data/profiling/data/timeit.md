@@ -26,12 +26,107 @@
 что позволяет сгладить влияние случайных ошибок измерения.  
 - **Использование точных функций времени**: используется функция с максимально возможной точностью (`time.perf_counter()`).  
 
-## Примеры использования
-Пример измерения времени выполнения выражения
+## Практические применения
+- Сравнение производительности различных алгоритмов и структур данных.  
+- Выявление "узких мест" в коде для последующей оптимизации.  
+- Подбор наиболее эффективных методов работы с коллекциями.  
+- Анализ чувствительности алгоритмов к размеру входных данных.  
 
+## Особенности и рекомендации
+- Всегда использовать параметр `setup` для импортов и инициализации объектов, чтобы не учитывать время подготовки 
+в результатах измерения.  
+- Проводить измерения в одинаковых условиях, избегать посторонних нагрузок на систему.  
+- Для получения более достоверных результатов использовать `repeat` и рассчитывать медиану или минимальное время среди 
+нескольких попыток.  
+- Не рекомендуется использовать `timeit` для измерения времени выполнения длительных фрагментов кода 
+(дольше нескольких секунд), так как он рассчитан на быстрые операции.  
+
+## Примеры использования
+- Измерение времени выполнения выражения  
+  
 ```python
 import timeit
 
 result = timeit.timeit("sum([i for i in range(100)])", number=100000)
 print(result)
+```
+  
+- Использование подготовительного кода  
+  
+```python
+import timeit
+
+setup_code = "from collections import deque"
+stmt_code = """
+d = deque()
+for i in range(100):
+    d.append(i)
+"""
+
+result = timeit.timeit(stmt=stmt_code, setup=setup_code, number=1000)
+print(result)
+```
+  
+- Сравнение скорости операций разных структур данных  
+  
+```python
+import timeit
+
+list_code = """
+lst = []
+for i in range(100):
+    lst.append(i)
+"""
+
+deque_code = """
+from collections import deque
+d = deque()
+for i in range(100):
+    d.append(i)
+"""
+
+list_time = timeit.timeit(list_code, number=1000)
+deque_time = timeit.timeit(deque_code, number=1000)
+
+print("list:", list_time)
+print("deque:", deque_time)
+```
+  
+- Использование функции  
+  
+```python
+import timeit
+
+def test():
+    s = 0
+    for i in range(100):
+        s += i
+
+result = timeit.timeit("test()", setup="from __main__ import test", number=10000)
+print(result)
+```
+  
+[Ноутбук с примерами](timeit.ipynb)
+
+## Расширенные возможности
+Использование `Timer` для более гибкого управления измерениями:  
+
+```python
+import timeit
+
+timer = timeit.Timer(stmt="x = sum(range(100))")
+print(timer.timeit(number=1000))
+print(timer.repeat(repeat=5, number=1000))
+```
+  
+Профилирование пользовательских функций с передачей окружения через `globals()`:  
+
+```python
+import timeit
+
+def custom_sum():
+    return sum([i for i in range(100)])
+
+timer = timeit.Timer("custom_sum()", globals=globals())
+print(timer.timeit(10000))
 ```
