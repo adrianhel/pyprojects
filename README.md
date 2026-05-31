@@ -10,4 +10,4 @@
 Проекты на Python.  
 
 ## Содержание  
-1. [Профилирование](/data/profiling.md)
+[Профилирование](/data/profiling.md)
